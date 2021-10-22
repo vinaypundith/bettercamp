@@ -1,0 +1,7 @@
+select disk 0
+select volume 1
+shrink desired=2 minimum=1
+create partition primary size=1
+set id=ebd0a0a2-b9e5-4433-87c0-68b6b72699c7
+format quick fs=fat label=WinBoot
+assign mount=C:\bootloadermount
