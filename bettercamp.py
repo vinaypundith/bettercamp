@@ -14,19 +14,20 @@ import urllib.request
 import os
 
 osversionAsDecimal = float(version()[0:version().index('.',3)])
-model = str(subprocess.check_output("wmic csproduct get name", shell=True))
-modelformatted =(model[(model.find(r'\r\r\n')+6):model.find(r'\r\r\n\r\r\n')]).strip()
+#model = str(subprocess.check_output("wmic csproduct get name", shell=True))
+modelformatted = "MacBookPro8,1"# (model[(model.find(r'\r\r\n')+6):model.find(r'\r\r\n\r\r\n')]).strip()
 print(modelformatted)
 EFInotSupportedModels = {"MacPro1,1", "MacPro2,1", "MacPro3,1", "MacPro4,1", "MacPro5,1", "iMac7,1", "iMac8,1", "MacBookAir1,1", "MacBookPro1,1", "MacBookPro2,1", "MacBookPro3,1","MacBookPro4,1", "MacBook1,1", "MacBook2,1", "MacBook3,1","MacBook4,1"}
 hasGT9400M = {"MacBook5,1", "MacBook5,2", "MacBookAir2,1", "MacBookPro5,1", "MacBookPro5,2", "MacBookPro5,3", "MacBookPro5,4", "MacBookPro5,5", "MacBook6,1", "iMac9,1", "iMac10,1", "MacMini3,1"}
 hasGT320M = {"MacBook7,1", "MacBookAir3,1", "MacBookAir3,2", "MacBookPro7,1", "MacMini4,1"}
 is2011 = {"MacBookAir4,1", "MacBookAir4,2", "MacBookPro8,1", "MacBookPro8,2", "MacBookPro8,3", "iMac12,1", "iMac12,2", "MacMini5,1", "MacMini5,2", "MacMini5,3"}
 hasGT9600M_that_I_dont_know_how_to_fix = {"MacBookPro5,1", "MacBookPro5,2", "MacBookPro5,3"}
+A1181x64 = {"MacBook2,1", "MacBook3,1", "MacBook4,1", "MacBook5,2"}
 is2012 = {}
 
-def check_if_efi_mode():
+def find_boot_mode():
     result = ""
-    bootloader = str(subprocess.check_output('bcdedit | find "path"'))
+    bootloader = str(os.popen('bcdedit | find "path"').read())
     if "winload.exe" in bootloader:
         result = "Legacy"
     elif "winload.efi" in bootloader:
@@ -34,19 +35,20 @@ def check_if_efi_mode():
     return result
 
 def run_boot_camp_installer():
-    if modelformatted == "MacBook5,2":
+    bcversionstring = linecache.getline(f'{os.getcwd()}\\BootCamp\\BootCamp.xml', 7)
+    bcversion = float(bcversionstring[bcversionstring.find('<ProductVersion>')+16:bcversionstring.find('<ProductVersion>')+19])
+    if modelformatted in A1181x64:
         toexecute = '\Drivers\\Apple\\BootCamp64.msi'
     else:
         toexecute = 'setup.exe'
         subprocess.run(f'{os.getcwd()}\\BootCamp\\Drivers\\Apple\BootCamp64.msi', shell=True)
-    if "4.0" in linecache.getline(f'{os.getcwd()}\\BootCamp\\BootCamp.xml', 7) and osversionAsDecimal > 6.1:
+    if bcversion <=4.0 and osversionAsDecimal > 6.1:
         subprocess.run(f'set __COMPAT_LAYER=WIN7RTM && start /wait {os.getcwd()}\BootCamp\{toexecute}', shell=True)
-        if osversionAsDecimal >= 10.0:
-            subprocess.run(f'{os.getcwd()}\\AppleHAL\\dpinst.exe', shell=True)
     else:
         subprocess.run(f'start {os.getcwd()}\BootCamp\{toexecute}', shell=True)
     print("Starting the Apple driver pack installer. Please follow the prompts on the screen to start it. DO NOT REBOOT THE COMPUTER after it finishes! Click 'No, I don't want to restart now' and then the Finish button.")
-
+    if bcversion <=5.1 and osversionAsDecimal >= 10.0:
+            subprocess.run(f'{os.getcwd()}\\AppleHAL\\dpinst.exe', shell=True)
 
 def fix_efi_audio_2011_2012():
     print("Adding the patch to enable Audio output")
@@ -60,18 +62,23 @@ def fix_efi_audio_2011_2012():
             choice = str(input("Your Choice: "))
             if choice == 'y' or choice == 'Y': # yes this will throw up if the user enters a different letter; it doesn't matter since in the final app this will be replaced by graphical buttons
                 subprocess.run("bcdedit.exe -set TESTSIGNING ON", shell=True)
-                subprocess.run(f'start {os.getcwd}\\Audio_2011_2012\\asl.x64 /loadtable -v DSDT.AML', shell=True)
+                subprocess.run(f'start {os.getcwd()}\\Audio_2011_2012\\asl.x64 /loadtable -v {os.getcwd()}\\Audio_2011_2012\\DSDT.AML', shell=True)
             else:
                 print("Skipping Audio Patch - Please add it to OpenCore manually")
     else:
+        print("Installing Audio Patch")
         subprocess.run("bcdedit.exe -set TESTSIGNING ON", shell=True)
-        subprocess.run(f'start {os.getcwd}\\Audio_2011_2012\\asl.x64 /loadtable -v DSDT.AML', shell=True)
+        print(f'start {os.getcwd()}\\Audio_2011_2012\\asl.x64 /loadtable -v {os.getcwd()}\\Audio_2011_2012\\DSDT.AML')
+        subprocess.run(f'start {os.getcwd()}\\Audio_2011_2012\\asl.x64 /loadtable -v {os.getcwd()}\\Audio_2011_2012\\DSDT.AML', shell=True)
+    print("Installing Intel (HD 3000 iGPU) Display Audio Driver")
+    subprocess.run(f'start pnputil /add-driver {os.getcwd()}\\Audio_2011_2012\\DisplayAudioDriver\\IntcDAud.inf /install', shell=True)
 
-boot_mode = "EFI"
+boot_mode = find_boot_mode()
 
 if modelformatted not in EFInotSupportedModels and modelformatted not in hasGT320M:
     if boot_mode == "EFI":
         if modelformatted in hasGT9400M:
+            print("Installing Chainloader to patch nVidia graphics driver bootloop/blank screen when booting in EFI mode")
             subprocess.run(f'{os.getcwd()}\\fix9400M_EFI\\fix9400M_EFI.bat', shell=True)
 
         if modelformatted in hasGT320M:
@@ -85,6 +92,7 @@ run_boot_camp_installer()
 if modelformatted in hasGT9400M or modelformatted in hasGT320M:
     input('Please connect your computer to the internet and press Enter to proceed.')
     subprocess.run(f'mkdir {os.getcwd()}\driverdownload', shell=True)
+    print("Downloading updated nVidia graphics driver")
     urllib.request.urlretrieve('https://us.download.nvidia.com/Windows/342.01/342.01-notebook-win10-64bit-international.exe', f'{os.getcwd()}\driverdownload\\nvidia.exe')
     subprocess.run(f'start /wait {os.getcwd()}\driverdownload\\nvidia.exe', shell=True)
 
