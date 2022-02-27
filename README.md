@@ -29,10 +29,10 @@ Tested hardware/software combinations:
 - iMac10.1 (Late 2009, Core 2 Duo 27" iMac) with Windows 11 build 22000.132
 - MacBook Pro 5.5 (Mid 2009, Core 2 Duo 13" MacBook Pro) with Windows 10 build 20H2 and Windows 11 build 22000.194 and .348
 - MacBook 5.2 (Early 2009, Core 2 Duo 13" Polycarbonate MacBook) with Windows 11 build 22000.194 and 22000.493
+- MacBookPro 8.1 (Early 2011 13" Core i5/i7 Aluminum Unibody model) with Windows 11 build 22000.493 and 22563.1
 
 Planned additions:
 - Fix the models list and grouping! It's currently a mess.
-- Add automatic detection of EFI or Legacy BIOS boot mode usage status
 - Make simple runnable package that doesn't need Python installed
 - Add audio fix for 2012 year models
 - Test and tweak accordingly for GeForce 9600M and 330M equipped 15 and 17" MacBook Pro laptops
