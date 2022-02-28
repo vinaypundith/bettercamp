@@ -26,10 +26,11 @@ Fixes that this tool currently implements:
 - For the A1181 MacBook 5.2 (Early 2009 13" white model), it instead runs BootCamp64.msi in the Drivers\Apple folder of the Boot Camp driver pack instead of the normal setup.exe, since setup.exe crashes saying "Boot Camp x64 is not supported on this model"
 
 Tested hardware/software combinations:
-- iMac10.1 (Late 2009, Core 2 Duo 27" iMac) with Windows 11 build 22000.132
-- MacBook Pro 5.5 (Mid 2009, Core 2 Duo 13" MacBook Pro) with Windows 10 build 20H2 and Windows 11 build 22000.194 and .348
-- MacBook 5.2 (Early 2009, Core 2 Duo 13" Polycarbonate MacBook) with Windows 11 build 22000.194 and 22000.493
-- MacBookPro 8.1 (Early 2011 13" Core i5/i7 Aluminum Unibody model) with Windows 11 build 22000.493 and 22563.1
+- iMac10.1 (Late 2009, Core 2 Duo 27" iMac) with Windows 11 build 22000.132 in EFI mode
+- MacBook Pro 5.5 (Mid 2009, Core 2 Duo 13" MacBook Pro) with Windows 10 build 20H2 and Windows 11 build 22000.194 and .348 in EFI mode
+- MacBook 5.2 (Early 2009, Core 2 Duo 13" Polycarbonate MacBook) with Windows 11 build 22000.194 and 22000.493 in EFI mode
+- MacBookPro 8.1 (Early 2011 13" Core i5/i7 Aluminum Unibody model) with Windows 11 build 22000.493 and 22563.1 in EFI mode
+- MacBook 4.1 (Early 2008, Core 2 Duo 13" Polycarbonate MacBook) with Windows 11 build 22000.194 and 22000.493 in legacy BIOS boot mode
 
 Planned additions:
 - Fix the models list and grouping! It's currently a mess.
