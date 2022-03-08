@@ -22,7 +22,7 @@ hasGT9400M = {"MacBook5,1", "MacBook5,2", "MacBookAir2,1", "MacBookPro5,1", "Mac
 hasGT320M = {"MacBook7,1", "MacBookAir3,1", "MacBookAir3,2", "MacBookPro7,1", "MacMini4,1"}
 is2011 = {"MacBookAir4,1", "MacBookAir4,2", "MacBookPro8,1", "MacBookPro8,2", "MacBookPro8,3", "iMac12,1", "iMac12,2", "MacMini5,1", "MacMini5,2", "MacMini5,3"}
 hasGT9600M_that_I_dont_know_how_to_fix = {"MacBookPro5,1", "MacBookPro5,2", "MacBookPro5,3"}
-A1181x64 = {"MacBook2,1", "MacBook3,1", "MacBook4,1", "MacBook5,2"}
+A1181x64 = {"MacBook2,1", "MacBook3,1", "MacBook4,1", "MacBook5,2" "MacBook5,1"} # MacBook5.1 is not an A1181 (it's an A1278) but suffers from the same issue of the boot camp package saying "x64 not supported"
 is2012 = {"iMac13,1", "iMac13,2", "MacBookAir4,2", "MacBookAir5,1", "MacBookAir5,2", "MacBookPro9,2", "MacBookPro9,1", "MacBookPro10,1", "MacBookPro10,2", "MacMini6,1", "MacMini6,2"}
 
 def find_boot_mode():
