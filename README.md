@@ -1,6 +1,8 @@
 # bettercamp - 
 A super simple script to automate hardware drivers setup for Microsoft Windows on older Apple Macintosh computers
 
+Note: Seems like the copy of IntcHDAud.inf Intel audio driver uploaded here is corrupt, use a different copy (extract any OEM, like Dell's, Intel HD Graphics driver and use the audio inf file from its extracted folder)
+
 What this tool does:
 
 February 20, 2022 - Very first upload of at least functional code! Please note - this means that there are almost certainly bugs or cases that'll make it not work. As long as this message is here, consider yourself as beta testing and don't kill me if your computer is sent into a bootloop. That being said, there is a good chance it'll work.
