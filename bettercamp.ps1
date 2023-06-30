@@ -15,10 +15,38 @@ $A1181x64 = "MacBook2,1", "MacBook3,1", "MacBook4,1", "MacBook5,2", "MacBook5,1"
 
 
 
-if($A1181x64 -contains $model){
-{
-    $executestring = '\Drivers\Apple\BootCamp64.msi'
+function Run-Bootcamp {
+    if($A1181x64 -contains $model) {
+        $executestring = '\Drivers\Apple\BootCamp64.msi'
+    }
+    else {
+        $executestring = 'setup.exe'
+    }
+    
+    if($osbuild -gt 7602 -And $bcversion -lt 4.1) {
+    $env:_COMPAT_LAYER=WIN7RTM
+    }
+
+    Start-Process -Wait $bcpath\BootCamp\$executestring
+
+    if($osbuild -gt 10000 -And $bcversion -lt 5.1) {
+        Start-Process -Wait AppleHAL\dpinst.exe
+    }
+}
+
+function Run-GPUupdate {
+    
+}
+
+function Run-9400fix {
+    if($bootmode -eq 'Uefi') {
+        foreach ($chip in $graphics) {
+           if(([String]$chip).Contains($geforce9400id)) {
+                Start-Process -Wait fix9400M_EFI\fix9400M_EFI.bat
+           }
+           elseif(
+        }
+    }
 }
 
 
-if($osbuild -gt 10000 -And $bcversion -lt 5.1)
