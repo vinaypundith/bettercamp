@@ -1,6 +1,5 @@
 ﻿$bcpath = 'C:\Users\Vinay\Downloads\BootCamp-041-84868'
 $model = Get-CimInstance -ClassName Win32_ComputerSystem | Select-Object -Property Model
-$model = 'MacBook5,2'
 $graphics = Get-PnpDevice -Class 'Display' | Select-Object -Property InstanceID
 $osbuild_str = [String] ([System.Environment]::OSVersion.Version | Select-Object -Property Build)
 $osbuild = [int] ($osbuild_str.Substring(8,$osbuild_str.Length-9))
@@ -8,6 +7,8 @@ $osbuild = [int] ($osbuild_str.Substring(8,$osbuild_str.Length-9))
 $bcversion = [decimal](Get-Content -Path $bcpath\BootCamp.xml -TotalCount 7)[-1].Substring(18,3)
 
 $geforce9400id = 'PCI\VEN_10DE&DEV_0863'
+$graphics = $geforce9400id
+$bootmode = '@{BiosFirmwareType=Uefi}'
 $EFInotSupportedModels = "MacPro1,1", "MacPro2,1", "MacPro3,1", "MacPro4,1", "MacPro5,1", "iMac7,1", "iMac8,1", "MacBookAir1,1", "MacBookPro1,1", "MacBookPro2,1", "MacBookPro3,1","MacBookPro4,1", "MacBook1,1", "MacBook2,1", "MacBook3,1","MacBook4,1"
 $A1181x64 = "MacBook2,1", "MacBook3,1", "MacBook4,1", "MacBook5,2", "MacBook5,1"
 
@@ -41,20 +42,20 @@ function Run-Bootcamp {
     }
 }
 
-Run-Bootcamp
+#Run-Bootcamp
 
 function Run-GPUupdate {
     
 }
 
 function Run-9400fix {
-    if($bootmode -eq 'Uefi') {
+    if($bootmode -eq '@{BiosFirmwareType=Uefi}') {
         foreach ($chip in $graphics) {
            if(([String]$chip).Contains($geforce9400id)) {
-                Start-Process -Wait fix9400M_EFI\fix9400M_EFI.bat
+                Start-Process -Wait $PSScriptRoot\fix9400M_EFI\fix9400M_EFI.bat
            }
         }
     }
 }
 
-
+#Run-9400fix
