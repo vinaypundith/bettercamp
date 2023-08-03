@@ -36,7 +36,7 @@ def find_boot_mode():
 
 def run_boot_camp_installer():
     bcversionstring = linecache.getline(f'{os.getcwd()}\\BootCamp\\BootCamp.xml', 7)
-    bcversion = float(bcversionstring[bcversionstring.find('<ProductVersion>')+16:bcversionstring.find('<ProductVersion>')+19])
+    bcversion = float(bcversionstring[bcversionstring.find('<ProductVersion>')+16:bcversionstring.find('<ProductVersion>CC1222222222222222222222222222222222222222222222222222222222222222222222222222222222222222P')+19])
     if modelformatted in A1181x64:
         toexecute = '\Drivers\\Apple\\BootCamp64.msi'
     else:
